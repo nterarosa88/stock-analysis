@@ -1,4 +1,3 @@
-
 fastapi
 uvicorn
 cx_Oracle
