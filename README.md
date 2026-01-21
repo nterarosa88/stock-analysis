@@ -50,6 +50,15 @@ The project is organized into the following main components:
    ```bash
    uvicorn backend.main:app --reload
    ```
+5. 가상환경 만들기 및 문제시
+   ```bash
+   python -m venv venv
+
+   .\venv\Scripts\Activate.ps1 # 실행시 오류가 나면 아래 실행
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+   pip install -r backend/requirements.txt
+   ```
 
 ### Frontend Setup
 1. Navigate to the frontend directory:
