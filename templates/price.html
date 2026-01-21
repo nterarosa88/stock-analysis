@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>종목 시세 [ka10086]</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+
+        button {
+            padding: 8px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .content-area {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: right;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+
+        td:nth-child(1),
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4) {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #chart-container {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+        }
+
+        .load-more-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        <a href="/">🏠 홈으로</a> | <a href="/list">🔙 종목 리스트로</a>
+    </div>
+
+    <h1>3. 종목 시세 [ka10086]</h1>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>종목코드:</label>
+            <input type="text" value="{{ code }}" readonly>
+        </div>
+        <div class="filter-group">
+            <label>종목명:</label>
+            <input type="text" value="{{ name or '' }}" readonly>
+        </div>
+        <button onclick="location.reload()">조회</button>
+        <button class="secondary" onclick="toggleView()" id="toggle-btn">차트 보기</button>
+    </div>
+
+    <div id="list-view" class="content-area">
+        <table id="price-table">
+            <thead>
+                <tr>
+                    <th>시장구분</th>
+                    <th>일자</th>
+                    <th>종목명</th>
+                    <th>종목코드</th>
+                    <th>시가</th>
+                    <th>고가</th>
+                    <th>저가</th>
+                    <th>종가</th>
+                    <th>등락률</th>
+                    <th>거래량</th>
+                    <th>거래대금</th>
+                </tr>
+            </thead>
+            <tbody id="price-body">
+                {% for item in result %}
+                <tr>
+                    <td>{{ item.market_name }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ name }}</td>
+                    <td>{{ code }}</td>
+                    <td>{{ item.open }}</td>
+                    <td>{{ item.high }}</td>
+                    <td>{{ item.low }}</td>
+                    <td>{{ item.close }}</td>
+                    <td>{{ item.rate }}%</td>
+                    <td>{{ item.volume }}</td>
+                    <td>{{ item.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="load-more-container">
+            <button id="load-more-btn" onclick="loadMore()" {% if not next_key %}style="display:none" {% endif
+                %}>더보기</button>
+        </div>
+    </div>
+
+    if (isListView) {
+    listDiv.classList.remove('hidden');
+    chartDiv.classList.add('hidden');
+    btn.innerText = "차트 보기";
+    } else {
+    listDiv.classList.add('hidden');
+    chartDiv.classList.remove('hidden');
+    btn.innerText = "목록 보기";
+    renderChart();
+    }
+    }
+
+    async function loadMore() {
+    if (!currentNextKey) return;
+
+    const btn = document.getElementById('load-more-btn');
+    btn.disabled = true;
+    btn.innerText = "로딩중...";
+
+    try {
+    const response = await fetch(`/api/price?code=${currentCode}&next_key=${encodeURIComponent(currentNextKey)}`);
+    const data = await response.json();
+
+    if (data && data.list && data.list.length > 0) {
+    // Append to table
+    const tbody = document.getElementById('price-body');
+    data.list.forEach(item => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+    <td>${item.market_name || '-'}</td>
+    <td>${item.date}</td>
+    <td>{{ name }}</td>
+    <td>{{ code }}</td>
+    <td>${item.open}</td>
+    <td>${item.high}</td>
+    <td>${item.low}</td>
+    <td>${item.close}</td>
+    <td>${item.rate}%</td>
+    <td>${item.volume}</td>
+    <td>${item.amount}</td>
+    `;
+    tbody.appendChild(row);
+    });
+
+    // Update state
+    allData = allData.concat(data.list);
+    currentNextKey = data.next_key;
+
+    if (!currentNextKey) {
+    btn.style.display = 'none';
+    }
+
+    // If chart is active, update it
+    if (!isListView && chartInstance) {
+    renderChart();
+    }
+    } else {
+    btn.style.display = 'none';
+    }
+    } catch (error) {
+    console.error("Error loading more data:", error);
+    alert("데이터를 불러오는 중 오류가 발생했습니다.");
+    } finally {
+    btn.disabled = false;
+    btn.innerText = "더보기";
+    }
+    }
+
+    function renderChart() {
+    const ctx = document.getElementById('priceChart').getContext('2d');
+
+    // Prepare data for Chart.js
+    // Reverse data so oldest is first for the chart x-axis
+    const chartData = [...allData].reverse();
+
+    const labels = chartData.map(item => item.date);
+    const prices = chartData.map(item => parseInt(item.close.replace(/,/g, '')));
+
+    if (chartInstance) {
+    chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+    labels: labels,
+    datasets: [{
+    label: '종가',
+    data: prices,
+    borderColor: 'rgb(75, 192, 192)',
+    tension: 0.1
+    }]
+    },
+    options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+    intersect: false,
+    mode: 'index',
+    },
+    }
+    });
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>종목 리스트 [ka10099]</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select,
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        <a href="/">🏠 홈으로</a>
+    </div>
+
+    <h1>2. 종목 리스트 [ka10099]</h1>
+
+    <form action="/list" method="get" class="filters">
+
+        <div class="filter-group">
+            <label for="market">시장구분:</label>
+            <select name="market" id="market">
+                <option value="0" {% if market=='0' %}selected{% endif %}>거래소</option>
+                <option value="10" {% if market=='10' %}selected{% endif %}>코스닥</option>
+                <option value="8" {% if market=='8' %}selected{% endif %}>ETF</option>
+                <option value="5" {% if market=='5' %}selected{% endif %}>선물</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="stock_name">종목명:</label>
+            <input type="text" name="stock_name" id="stock_name" value="{{ stock_name or '' }}"
+                placeholder="종목명 검색 (선택)">
+        </div>
+
+        <button type="submit">조회</button>
+    </form>
+
+    {% if result is not none %}
+    <p>총 {{ result|length }}개의 종목이 조회되었습니다.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>시장명</th>
+                <th>종목명</th>
+                <th>시가총액</th>
+                <th>전일종가</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in result %}
+            <tr>
+                <td>{{ item.market_name }}</td>
+                <td><a href="/price?code={{ item.code }}&name={{ item.name }}">{{ item.name }}</a></td>
+                <td>{{ item.market_cap }}</td>
+                <td>{{ item.last_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>조회 버튼을 눌러 데이터를 확인하세요.</p>
+    {% endif %}
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kiwoom REST API</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .menu-card {
+            border: 1px solid #ddd;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 250px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kiwoom REST API Dashboard</h1>
+    <div class="menu-container">
+        <div class="menu-card">
+            <a href="/info">
+                <h2>1. 종목 정보 조회</h2>
+                <p>[TR: ka10001]</p>
+                <p>개별 종목의 상세 정보를 조회합니다.</p>
+            </a>
+        </div>
+        <div class="menu-card">
+            <a href="/list">
+                <h2>2. 종목 리스트</h2>
+                <p>[TR: ka10099]</p>
+                <p>시장별(코스피/코스닥) 종목 리스트를 조회합니다.</p>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

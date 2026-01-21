@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>종목 정보 조회 [ka10001]</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        <a href="/">🏠 홈으로</a>
+    </div>
+
+    <h1>1. 종목 정보 조회 [ka10001]</h1>
+
+    <div class="form-group">
+        <form action="/info" method="post">
+            <label>종목코드: </label>
+            <input type="text" name="code" value="{{ search_code }}" placeholder="예: 005930" required>
+            <button type="submit">조회</button>
+        </form>
+    </div>
+
+    {% if result %}
+    <table>
+        <tr>
+            <th>항목</th>
+            <th>값</th>
+        </tr>
+        <tr>
+            <td>종목코드</td>
+            <td>{{ result.code }}</td>
+        </tr>
+        <tr>
+            <td>종목명</td>
+            <td>{{ result.name }}</td>
+        </tr>
+        <tr>
+            <td>시가총액</td>
+            <td>{{ result.market_cap }}</td>
+        </tr>
+        <tr>
+            <td>시가</td>
+            <td>{{ result.open }}</td>
+        </tr>
+        <tr>
+            <td>저가</td>
+            <td>{{ result.low }}</td>
+        </tr>
+        <tr>
+            <td>고가</td>
+            <td>{{ result.high }}</td>
+        </tr>
+        <tr>
+            <td>현재가</td>
+            <td>{{ result.current }}</td>
+        </tr>
+    </table>
+    {% elif search_code %}
+    <p style="color: red;">데이터를 찾을 수 없습니다.</p>
+    {% endif %}
+</body>
+
+</html>
