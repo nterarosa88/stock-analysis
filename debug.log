@@ -2,8 +2,6 @@ KiwoomREST initialized
 Attempting login with AppKey: zSGJp...
 Request URL: https://api.kiwoom.com/oauth2/token
 Request Headers: {'Content-Type': 'application/json'}
-Request Body (before JSON encoding): {'grant_type': 'client_credentials', 'appkey': 'zSGJpwoiewyrt0S2axli2D6hFuLne84twWNl925BDiQ', 'secretkey': 'keLe2y_lHLfcSqP-ArylTkzE2hd1S3aScp8Tnn0Dx1w'}
-Login response status: 200
 Login response headers: {'Date': 'Wed, 21 Jan 2026 17:24:20 GMT', 'Content-Type': 'application/json;charset=UTF-8', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Access-Control-Expose-Headers': 'user-data', 'Vary': 'Origin, Access-Control-Request-Method, Access-Control-Request-Headers'}
 Login response body: {"return_msg":"인증에 실패했습니다[8050:지정단말기 인증에 실패했습니다]","return_code":3}
 Response JSON keys: ['return_msg', 'return_code']
